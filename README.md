@@ -9,19 +9,10 @@ Este proyecto implementa un motor de ray casting 3D desde cero en Rust, creando 
 ## Video Demostración
 
 <div align="center">
-  <iframe width="560" height="315" src="https://youtu.be/6mf6UVw-2Os" 
-          title="Demostración del Juego de Ray Casting" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-  </iframe>
-  *Video de demostración del juego ejecutándose en tiempo real*
-</div>
 
+[![Demostración del Juego de Ray Casting](https://img.youtube.com/vi/6mf6UVw-2Os/0.jpg)](https://www.youtube.com/watch?v=6mf6UVw-2Os)
 
-
-### Enlace
-- [Ver en YouTube](https://youtu.be/6mf6UVw-2Os)
+*Video de demostración del juego ejecutándose en tiempo real*
 
 </div>
 
