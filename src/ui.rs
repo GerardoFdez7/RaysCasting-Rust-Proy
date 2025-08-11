@@ -34,8 +34,8 @@ impl UI {
         // Instructions
         self.draw_text(buffer, "Press SPACE to continue", window_width / 2 - 100, window_height / 2 + 40, 0xCCCCCC, 1, window_width, window_height);
         
-        // Animated sprite (spinning cube)
-        self.render_animated_sprite(buffer, window_width / 2, window_height / 2 + 100, elapsed, window_width, window_height);
+        // Draw bear illustration using circles
+        self.draw_bear(buffer, window_width / 2, window_height / 2 + 120, elapsed, window_width, window_height);
     }
 
     pub fn render_level_select(&self, buffer: &mut Vec<u32>, window_width: usize, window_height: usize) {
@@ -366,6 +366,68 @@ impl UI {
         let b = (b1 * (1.0 - factor) + b2 * factor) as u32;
         
         (r << 16) | (g << 8) | b
+    }
+
+    fn draw_circle(&self, buffer: &mut Vec<u32>, center_x: i32, center_y: i32, radius: i32, color: u32, window_width: usize, window_height: usize) {
+        for y in (center_y - radius).max(0)..(center_y + radius + 1).min(window_height as i32) {
+            for x in (center_x - radius).max(0)..(center_x + radius + 1).min(window_width as i32) {
+                let dx = x - center_x;
+                let dy = y - center_y;
+                let distance_sq = dx * dx + dy * dy;
+                
+                if distance_sq <= radius * radius {
+                    let pixel_index = (y as usize) * window_width + (x as usize);
+                    if pixel_index < buffer.len() {
+                        buffer[pixel_index] = color;
+                    }
+                }
+            }
+        }
+    }
+
+    fn draw_bear(&self, buffer: &mut Vec<u32>, center_x: usize, center_y: usize, time: f64, window_width: usize, window_height: usize) {
+        let cx = center_x as i32;
+        let cy = center_y as i32;
+        
+        // Colores del oso
+        let brown = 0x8B4513;  // Marrón
+        let dark_brown = 0x654321;  // Marrón oscuro
+        let black = 0x000000;  // Negro
+        let pink = 0xFFB6C1;   // Rosa claro
+        
+        // Animación sutil - el oso "respira"
+        let breath = (time * 1.5).sin() * 2.0;
+        
+        // Cuerpo principal (círculo grande)
+        self.draw_circle(buffer, cx, cy + 10, (25.0 + breath) as i32, brown, window_width, window_height);
+        
+        // Cabeza (círculo mediano)
+        self.draw_circle(buffer, cx, cy - 20, (18.0 + breath * 0.5) as i32, brown, window_width, window_height);
+        
+        // Orejas (dos círculos pequeños)
+        self.draw_circle(buffer, cx - 12, cy - 32, 8, dark_brown, window_width, window_height);
+        self.draw_circle(buffer, cx + 12, cy - 32, 8, dark_brown, window_width, window_height);
+        
+        // Orejas internas (círculos más pequeños y rosados)
+        self.draw_circle(buffer, cx - 12, cy - 32, 4, pink, window_width, window_height);
+        self.draw_circle(buffer, cx + 12, cy - 32, 4, pink, window_width, window_height);
+        
+        // Ojos (dos círculos negros pequeños)
+        self.draw_circle(buffer, cx - 6, cy - 25, 3, black, window_width, window_height);
+        self.draw_circle(buffer, cx + 6, cy - 25, 3, black, window_width, window_height);
+        
+        // Nariz (círculo negro pequeño)
+        self.draw_circle(buffer, cx, cy - 15, 2, black, window_width, window_height);
+        
+        // Patas (cuatro círculos pequeños)
+        self.draw_circle(buffer, cx - 15, cy + 30, 6, dark_brown, window_width, window_height);
+        self.draw_circle(buffer, cx + 15, cy + 30, 6, dark_brown, window_width, window_height);
+        self.draw_circle(buffer, cx - 8, cy + 35, 5, dark_brown, window_width, window_height);
+        self.draw_circle(buffer, cx + 8, cy + 35, 5, dark_brown, window_width, window_height);
+        
+        // Brazos (dos círculos medianos a los lados)
+        self.draw_circle(buffer, cx - 25, cy + 5, 8, brown, window_width, window_height);
+        self.draw_circle(buffer, cx + 25, cy + 5, 8, brown, window_width, window_height);
     }
 
     fn get_simple_font(&self) -> std::collections::HashMap<char, [u8; 8]> {
